@@ -1,0 +1,6 @@
+./sample_data/anscombe.json
+./sample_data/california_housing_test.csv
+./sample_data/mnist_train_small.csv
+./sample_data/california_housing_train.csv
+./sample_data/mnist_test.csv
+./sample_data/README.md
