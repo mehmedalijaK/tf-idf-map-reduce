@@ -1,3 +1,4 @@
+import math
 from functools import reduce
 from itertools import starmap
 
@@ -53,6 +54,19 @@ def key_reduce(array, value):
     return array
 
 
+def key_word_frequency_reduce(array, value):
+    if array and array[-1][0] == value.word:
+        array[-1] = array[-1][0], array[-1][1] + 1
+    else:
+        array.append((value.word, 1))
+    return array
+
+
+def flatten_list_reduce(acc, x):
+    acc = acc + reduce(lambda z, y: z + [y], x, [])
+    return acc
+
+
 def calculate_tf(file_path):
     with open(file_path) as my_file:
         file_text = my_file.read()
@@ -65,24 +79,28 @@ def calculate_tf(file_path):
         mapper_sort = sorted(mapper, key=lambda x: x[0])  # creates sorted group for reducer
         mapper_reducer = reduce(key_reduce, mapper_sort, [])
 
-        word_frequency_list = starmap(lambda key, value: WordFrequency(file_path, key, value/word_count),
+        word_frequency_list = starmap(lambda key, value: WordFrequency(file_path, key, value / word_count),
                                       mapper_reducer)
         return word_frequency_list
 
 
-def flatten_list_reduce(acc, x):
-    acc = acc + reduce(lambda z, y: z + [y], x, [])
-    return acc
-
-
 def calculate_tf_sum(file_paths):
     word_frequency_list = map(calculate_tf, file_paths)
-    result = reduce(flatten_list_reduce, word_frequency_list, [])
-    return result
+    return reduce(flatten_list_reduce, word_frequency_list, [])
+
+
+def calculate_idf_value(word_tf_list):
+    document_count = reduce(lambda acc, y: acc + 1, config_file_paths, 0)
+    word_tf_sorted = sorted(word_tf_list, key=lambda x: x.word)
+    word_idf_counter = reduce(key_word_frequency_reduce, word_tf_sorted, [])
+    word_idf_values = starmap(lambda key, value: (key, math.log10(document_count/value)), word_idf_counter)
+    return word_idf_values
 
 
 if __name__ == "__main__":
     calculate_tf("sample_data/sample01.csv")
     config_yaml = yaml.safe_load(open('config.yaml'))
     config_file_paths = config_yaml['file_paths']
-    print(calculate_tf_sum(config_file_paths))
+    word_tf = calculate_tf_sum(config_file_paths)
+    print(list(calculate_idf_value(word_tf)))
+
