@@ -1,6 +1,8 @@
 from functools import reduce
 from itertools import starmap
 
+import yaml
+
 BANNED_CHARACTERS = [',', '.', '!', '?', '\n', '"', '\'', '“', '(', ')', '#', '$', '@']
 
 
@@ -68,9 +70,19 @@ def calculate_tf(file_path):
         return word_frequency_list
 
 
-def calculate_tf_sum():
-    print("TO BE IMPLEMENTED")
+def reducer_list(acc, x):
+    acc = acc + reduce(lambda z, y: z + [y], x, [])
+    return acc
+
+
+def calculate_tf_sum(file_paths):
+    word_frequency_list = map(calculate_tf, file_paths)
+    result = reduce(reducer_list, word_frequency_list, [])
+    return result
 
 
 if __name__ == "__main__":
-    calculate_tf("./sample_data/test.csv")
+    calculate_tf("sample_data/sample01.csv")
+    config_yaml = yaml.safe_load(open('config.yaml'))
+    config_file_paths = config_yaml['file_paths']
+    print(calculate_tf_sum(config_file_paths))
