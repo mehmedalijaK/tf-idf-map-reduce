@@ -19,13 +19,13 @@ class WordFrequency:
         return self.file_id + " " + self.word + " " + str(self.frequency)
 
 
-def length_reducer(acc, x):
+def length_reduce(acc, x):
     if reduce(lambda acc_len, y: acc_len + 1, x, 0) > 3:
         return acc + [x]
     return acc
 
 
-def word_reducer(acc, x):
+def word_reduce(acc, x):
     if x in BANNED_CHARACTERS:
         return acc
 
@@ -57,8 +57,8 @@ def calculate_tf(file_path):
     with open(file_path) as my_file:
         file_text = my_file.read()
 
-        word_splitter = reduce(word_reducer, file_text, [])  # creates list of all words
-        word_list = reduce(length_reducer, word_splitter, [])  # removes words with less than 4 letters
+        word_split = reduce(word_reduce, file_text, [])  # creates list of all words
+        word_list = reduce(length_reduce, word_split, [])  # removes words with less than 4 letters
         word_count = reduce(lambda acc_len, y: acc_len + 1, word_list, 0)
 
         mapper = map(lambda key: (key, 1), word_list)
@@ -70,14 +70,14 @@ def calculate_tf(file_path):
         return word_frequency_list
 
 
-def reducer_list(acc, x):
+def flatten_list_reduce(acc, x):
     acc = acc + reduce(lambda z, y: z + [y], x, [])
     return acc
 
 
 def calculate_tf_sum(file_paths):
     word_frequency_list = map(calculate_tf, file_paths)
-    result = reduce(reducer_list, word_frequency_list, [])
+    result = reduce(flatten_list_reduce, word_frequency_list, [])
     return result
 
 
