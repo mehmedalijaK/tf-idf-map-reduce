@@ -10,7 +10,7 @@ $tf(t,d) = \frac{{\text{{Number of occurrences of }} t \text{{ in document }} d}
 
 `Inverse Document Frequency` is a measure of how unique or rare a term is across a collection of documents.
 
-$\text{idf}(t, d) = \log\left(\frac{{\text{{Number of all documents}}}}{{\text{{Number of document which contain }}t}}\right)$
+$\text{idf}(t, d) = \log\left(\frac{{\text{{Number of all documents d}}}}{{\text{{Number of document which contain }}t}}\right)$
 
 `TF-IDF` considers both the frequency of the word in the document, and its rarity across the entire collection. TF-IDF calculates how much relevant our word or term is.
 
