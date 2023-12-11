@@ -110,7 +110,7 @@ def calculate_idf_value(word_tf_list):
 
 
 def create_new_array_tf_idf(acc, value):
-    check = reduce(lambda acc2, y2: y2[1] + acc2 if value.word == y2[0] else acc2, word_idf, value.frequency)
+    check = reduce(lambda acc2, y2: y2[1] * acc2 if value.word == y2[0] else acc2, word_idf, value.frequency)
     acc.append((value.word, value.file_id, check))
     return acc
 
