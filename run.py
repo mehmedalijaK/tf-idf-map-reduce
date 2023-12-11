@@ -33,7 +33,7 @@ def word_reduce(acc, x):
     if not acc:
         acc = ['']
 
-    if x in '`':
+    if x == '`':
         x = ' '
 
     if x != ' ':
@@ -94,7 +94,18 @@ def calculate_idf_value(word_tf_list):
     word_tf_sorted = sorted(word_tf_list, key=lambda x: x.word)
     word_idf_counter = reduce(key_word_frequency_reduce, word_tf_sorted, [])
     word_idf_values = starmap(lambda key, value: (key, math.log10(document_count/value)), word_idf_counter)
-    return word_idf_values
+    return list(word_idf_values)
+
+
+def create_new_array(acc, value):
+    check = reduce(lambda acc2, y2: y2[1] + acc2 if value.word == y2[0] else acc2, word_idf, value.frequency)
+    acc.append((value.word, value.file_id, check))
+    return acc
+
+
+def calculate_tf_idf_value(word_tf_list, word_idf_list):
+    result = reduce(create_new_array, word_tf_list, [])
+    return sorted(result, key=lambda x: (x[1], x[2]))
 
 
 if __name__ == "__main__":
@@ -102,5 +113,5 @@ if __name__ == "__main__":
     config_yaml = yaml.safe_load(open('config.yaml'))
     config_file_paths = config_yaml['file_paths']
     word_tf = calculate_tf_sum(config_file_paths)
-    print(list(calculate_idf_value(word_tf)))
-
+    word_idf = calculate_idf_value(word_tf)
+    calculate_tf_idf_value(word_tf, word_idf)
