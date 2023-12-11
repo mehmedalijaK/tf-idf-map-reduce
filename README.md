@@ -15,3 +15,11 @@ $\text{idf}(t, d) = \log\left(\frac{{\text{{Number of all documents}}}}{{\text{{
 `TF-IDF` considers both the frequency of the word in the document, and its rarity across the entire collection. TF-IDF calculates how much relevant our word or term is.
 
 $\text{tf-idf}(t, d, D) = \text{tf}(t, d) \times \text{idf}(t, D)$
+
+## Features
+- Calculate tf value from specific document
+  - Function will return list of WordFrequency objects (file_id, word, frequency)[] from specific document
+- Calculate tf values from all documents
+  - Function will return list of WordFrequency objects (file_id, word, frequency)[] from all files
+- Calculate IDF values from a list of WordFrequency objects obtained from a function designed to calculate TF values for all documents
+- Calculate tf-idf values from two list of idf and tf values
